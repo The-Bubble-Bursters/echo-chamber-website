@@ -1,0 +1,30 @@
+{
+  "name": "echo-chamber-website-v2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "echo-chamber-website-v2",
+  "author": "Chuma Okoro",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "gatsby": "^5.13.7",
+    "gatsby-plugin-emotion": "^8.13.1",
+    "gatsby-plugin-image": "^3.13.1",
+    "gatsby-plugin-sharp": "^5.13.1",
+    "gatsby-source-filesystem": "^5.13.1",
+    "gatsby-transformer-remark": "^6.13.1",
+    "gatsby-transformer-sharp": "^5.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
