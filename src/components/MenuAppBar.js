@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { Link } from 'react-router-dom';
 
 export default function MenuAppBar() {
   const [auth, setAuth] = useState(true);
@@ -26,6 +27,10 @@ export default function MenuAppBar() {
   };
 
   const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAuth = () => {
     setAnchorEl(null);
   };
 
@@ -84,8 +89,8 @@ export default function MenuAppBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem>
+                <MenuItem onClick={handleAuth}><Link to="/login">Login/Register</Link></MenuItem>
               </Menu>
             </div>
           )}
