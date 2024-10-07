@@ -91,6 +91,7 @@ export default function MenuAppBar() {
               >
                 <MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem>
                 <MenuItem onClick={handleAuth}><Link to="/login">Login/Register</Link></MenuItem>
+                <MenuItem onClick={handleAuth}><Link to="/register">Register</Link></MenuItem>
               </Menu>
             </div>
           )}

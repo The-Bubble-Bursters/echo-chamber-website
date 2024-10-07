@@ -3,6 +3,7 @@ import * as React from 'react';
 import MenuAppBar from './components/MenuAppBar'
 import LandingPage from './components/LandingPage'
 import SignInScreen from './components/SignInScreen'
+import RegisterScreen from './components/RegisterScreen'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<SignInScreen/>} />
+            <Route path="/register" element={<RegisterScreen/>} />
           </Routes>
         </div>
       </Router>
