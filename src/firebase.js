@@ -17,11 +17,24 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-const app = initializeApp(firebaseConfig);
+// Function to initialize Firebase and handle errors
+const initializeFirebase = () => {
+    try {
+        const app = initializeApp(firebaseConfig);
+        return app;
+    } catch (error) {
+        console.error("Firebase initialization error:", error);
+        alert("There was a problem initializing Firebase. Please try refreshing the page or check your internet connection.");
+        return null; // Return null in case of failure
+    }
+};
 
-// Export initialized services to use in components
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+// Initialize Firebase app
+const app = initializeFirebase();
+
+const auth = app ? getAuth(app) : null;
+const db = app ? getFirestore(app) : null;
+const storage = app ? getStorage(app) : null;
+export { auth, db, storage };
 
 export default app;
