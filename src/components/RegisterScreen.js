@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Button, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -11,6 +12,7 @@ function RegisterScreen() {
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -29,7 +31,7 @@ function RegisterScreen() {
           displayName: name,
           phoneNumber: phone,  // Note: phoneNumber will not be stored in Auth unless using phone verification, better store it in Firestore or Realtime Database.
         }).then(() => {
-          console.log('User registered and profile updated:', user);
+          navigate('/profile')
         }).catch((error) => {
           console.error("Error updating user profile:", error);
         });
