@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,20 +6,16 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+  const [showAuth, setShowAuth] = useState(true);
+  const navigate = useNavigate();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,24 +25,32 @@ export default function MenuAppBar() {
     setAnchorEl(null);
   };
 
-  const handleAuth = () => {
-    setAnchorEl(null);
+  const logoutFirebase = () => {
+    signOut(auth).then(() => {
+      navigate('/')
+    }).catch((error) => {
+      // An error happened.
+    });
+
   };
+
+  useEffect(() => {
+    // async listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setShowAuth(false)
+      }
+      else {
+        setShowAuth(true)
+      }
+    });
+
+    // Cleanup subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -62,18 +65,35 @@ export default function MenuAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Echo Chamber
           </Typography>
+          
           {auth && (
+            
             <div>
+
+              {showAuth ? null
+                 : 
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    onClick={() => navigate('/profile')}
+                    color="inherit"
+                  >
+                    <AccountCircle />
+                  </IconButton>
+              }
+
               <IconButton
                 size="large"
-                aria-label="account of current user"
+                edge="end"
+                color="inherit"
+                aria-label="menu"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                color="inherit"
               >
-                <AccountCircle />
+                <MenuIcon />
               </IconButton>
+              
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -90,8 +110,13 @@ export default function MenuAppBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem>
-                <MenuItem onClick={handleAuth}><Link to="/login">Login/Register</Link></MenuItem>
-                <MenuItem onClick={handleAuth}><Link to="/register">Register</Link></MenuItem>
+                {showAuth ? [
+                  <MenuItem key="login" onClick={handleClose}><Link to="/login">Login</Link></MenuItem>,
+                  <MenuItem key="register" onClick={handleClose}><Link to="/register">Register</Link></MenuItem>
+                ] : [
+                  <MenuItem key="logout" onClick={logoutFirebase}>Logout</MenuItem>
+                ]}
+
               </Menu>
             </div>
           )}

@@ -1,44 +1,99 @@
 // Import FirebaseAuth and firebase.
-import React from 'react';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-
-import { getAnalytics } from "firebase/analytics";
-
-// Configure Firebase.
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
-};
-const app = firebase.initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-// Configure FirebaseUI.
-const uiConfig = {
-  // Popup signin flow rather than redirect flow.
-  signInFlow: 'popup',
-  // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-  signInSuccessUrl: '/',
-  // We will display Google and Facebook as auth providers.
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-  ],
-};
+import { useState, useEffect }  from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { auth } from '../firebase';
+import { FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Button, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function SignInScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleLogin = () => {
+    // Validate the form fields
+    if ( !email || !password ) {
+      setErrorMessage("All fields are required.");
+      return;
+    }
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in 
+      // const user = userCredential.user;
+      navigate('/profile');
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(`error code=${errorCode} and ${errorMessage}`)
+    });
+  }
+
+  useEffect(() => {
+    // async listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If user is signed in, navigate to profile
+        navigate('/profile');
+      }
+    });
+
+    // Cleanup subscription when the component unmounts
+    return () => unsubscribe();
+  });
+
   return (
     <div>
       <h1>My App</h1>
       <p>Please sign-in:</p>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+
+  {/* Email Input */}
+  <TextField
+    label="Email"
+    variant="outlined"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    fullWidth
+    margin="normal"
+    type="email"
+  />
+
+
+      {/* Password Input */}
+      <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <OutlinedInput
+          id="outlined-adornment-password"
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
+        />
+      </FormControl>
+
+      {/* Error Message */}
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      
+      {/* Submit Button */}
+      <Button variant="contained" color="primary" onClick={handleLogin}>
+        Login
+      </Button>
     </div>
   );
 }

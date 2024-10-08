@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useState } from 'react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Button, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { auth } from '../firebase';
 
 function RegisterScreen() {
   const [name, setName] = useState('');
@@ -10,8 +11,6 @@ function RegisterScreen() {
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
-  const auth = getAuth();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 

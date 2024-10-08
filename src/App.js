@@ -1,7 +1,7 @@
 import './App.css';
-import * as React from 'react';
 import MenuAppBar from './components/MenuAppBar'
 import LandingPage from './components/LandingPage'
+import Profile from './components/Profile'
 import SignInScreen from './components/SignInScreen'
 import RegisterScreen from './components/RegisterScreen'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -18,6 +18,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<SignInScreen/>} />
             <Route path="/register" element={<RegisterScreen/>} />
+            <Route path="/profile" element={<Profile/>} />
           </Routes>
         </div>
       </Router>
