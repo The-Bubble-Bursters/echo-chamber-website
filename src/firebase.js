@@ -5,16 +5,17 @@ import { getFirestore } from "firebase/firestore"; // For Firestore
 import { getStorage } from "firebase/storage"; // For storage
 
 
-// Configure Firebase.
+// API keys for Firebase services are not secret
+// see this for more - https://firebase.google.com/support/guides/security-checklist#api-keys-not-secret
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID,
-    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyDdnUFkveHeEVFIfk6ayJ-S-pr7tWRPQms",
+    authDomain: "echo-chamber-427700.firebaseapp.com",
+    databaseURL: "https://echo-chamber-427700-default-rtdb.firebaseio.com",
+    projectId: "echo-chamber-427700",
+    storageBucket: "echo-chamber-427700.appspot.com",
+    messagingSenderId: "1017392512915",
+    appId: "1:1017392512915:web:01946f6a39cd83fc0f7266",
+    measurementId: "G-LS1T61WEG7"
 };
 
 // Function to initialize Firebase and handle errors
