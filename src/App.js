@@ -3,6 +3,7 @@ import MenuAppBar from './components/MenuAppBar'
 import LandingPage from './components/LandingPage'
 import Profile from './components/Profile'
 import SignInScreen from './components/SignInScreen'
+import Products from './components/Products'
 import RegisterScreen from './components/RegisterScreen'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<SignInScreen/>} />
             <Route path="/register" element={<RegisterScreen/>} />
+            <Route path="/Products" element={<Products/>} />
             <Route path="/profile" element={<Profile/>} />
           </Routes>
         </div>
