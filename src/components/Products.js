@@ -17,14 +17,10 @@ function Products() {
       return;
     }
     try {
-
-      // Log currentUser for debugging
-      console.log("Current User:", currentUser);
-      console.log("User UID:", currentUser.uid); // Check UID
       // Add a checkout session for the current user
       const checkoutSessionsRef = collection(db, "customers", currentUser.uid, "checkout_sessions");
       const docRef = await addDoc(checkoutSessionsRef, {
-        price: priceId,  // Replace with actual price ID
+        price: priceId,  // Use dynamic price ID
         success_url: window.location.origin,
         cancel_url: window.location.origin,
       });
@@ -33,11 +29,9 @@ function Products() {
       onSnapshot(docRef, (snap) => {
         const { error, url } = snap.data();
         if (error) {
-          // Show an error message if there's an issue
           alert(`An error occurred: ${error.message}`);
         }
         if (url) {
-          // Redirect to the Stripe checkout URL
           window.location.assign(url);
         }
       });
@@ -47,8 +41,6 @@ function Products() {
     }
   };
 
-
-  // Fetch products and prices
   const getProducts = async () => {
     try {
       const productsRef = collection(db, "products");
@@ -93,10 +85,11 @@ function Products() {
   };
 
   useEffect(() => {
-    // async listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setLoggedInUser(user.providerData[0])
+        setLoggedInUser({
+          uid: user.uid
+      })
       }
       else {
         setLoggedInUser(null)
@@ -104,7 +97,6 @@ function Products() {
     });
     getProducts();
 
-    // Cleanup subscription when the component unmounts
     return () => unsubscribe();
   }, []);
 
@@ -144,21 +136,20 @@ function Products() {
                         {price.amount} {price.currency} - {price.type === 'recurring' 
                           ? `Recurring (${price.interval})` 
                           : 'One-time'}
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            onClick={() => createCheckoutSession(loggedInUser, price.id)} // Use dynamic price ID
+                          >
+                            Checkout
+                          </Button>
+                        </CardActions>
                       </li>
                     ))}
                   </ul>
                 </CardContent>
-
-                <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={() => createCheckoutSession(loggedInUser, 'price_1GqIC8HYgolSBA35zoTTN2Zl')}
-                >
-                  Checkout
-                </Button>
-                </CardActions>
               </Card>
             </Grid2>
           ))}
