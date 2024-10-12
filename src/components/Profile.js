@@ -32,26 +32,6 @@ function Profile() {
     }
   };
 
-  const createStripePortal = async (uid) => {
-    if (uid) {
-      setSubLoading(true);
-      try {
-        const subscriptionRef = collection(db, `customers/${uid}/subscriptions`);
-        const subscriptionDocs = await getDocs(subscriptionRef);
-        const userSubscriptions = subscriptionDocs.docs.map(doc => ({
-          id: doc.id, // Subscription ID
-          ...doc.data() // Subscription data
-        }));
-        
-        setSubscriptions(userSubscriptions);
-      } catch (error) {
-        console.error("Error fetching subscription: ", error);
-      } finally {
-        setSubLoading(false);
-      }
-    }
-  };
-
   useEffect(() => {
     // Listener for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (user) => {
