@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs } from 'firebase/firestore';
+import Button from '@mui/material/Button';
+import { createPortalLink } from '../firebase-functions/createPortalLink'
 
 import { db } from '../firebase';
 
@@ -91,7 +93,9 @@ function Profile() {
             <p>Status: {subscription.status}</p>
             <p>Role: {subscription.role}</p>
             <p>Plan: {subscription.items[0].price.product.name}</p>
-            <a href={subscription.stripeLink}>Manage your subscription</a>
+            <Button variant="contained" onClick={() => createPortalLink()}>
+              Manage Subscription
+            </Button>
           </div>
         )) : (
           <p>No active subscription found.</p>
