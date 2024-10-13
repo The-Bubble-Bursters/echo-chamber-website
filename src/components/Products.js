@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from '../firebase';
 
 // Material UI components
-import { Box, Card, CardContent, CardActions, Button, Typography, CircularProgress, Grid2 } from '@mui/material';
+import { Box, Card, CardContent, CardActions, Button, Typography, CircularProgress, Grid2, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function Products() {
@@ -13,6 +13,9 @@ function Products() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [subscriptions, setSubscriptions] = useState(null);
   const [subLoading, setSubLoading] = useState(true);
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
+  const [redirecting, setRedirecting] = useState(false); // State to control redirection
+
 
   const fetchSubscription = async (uid) => {
     if (uid) {
@@ -40,6 +43,7 @@ function Products() {
       return;
     }
     try {
+      setOpenLoadingDialog(true)
       // Add a checkout session for the current user
       const checkoutSessionsRef = collection(db, "customers", currentUser.uid, "checkout_sessions");
       const docRef = await addDoc(checkoutSessionsRef, {
@@ -55,12 +59,15 @@ function Products() {
           alert(`An error occurred: ${error.message}`);
         }
         if (url) {
+          setRedirecting(true)
           window.location.assign(url);
         }
       });
     } catch (error) {
       console.error("Error creating checkout session:", error);
       alert("Failed to create checkout session.");
+    } finally {
+      setOpenLoadingDialog(false);
     }
   };
 
@@ -181,6 +188,17 @@ function Products() {
                           >
                             Checkout
                           </Button>
+                          <Dialog open={openLoadingDialog} onClose={() => setOpenLoadingDialog(false)} aria-labelledby="alert-dialog-title">
+                            <DialogTitle id="alert-dialog-title">Processing...</DialogTitle>
+                            <DialogContent>
+                              <CircularProgress />
+                              {redirecting ? (
+                                <p>Redirecting you to Stripe for payment...</p>
+                              ) : (
+                                <p>Please wait while we prepare your payment.</p>
+                              )}
+                            </DialogContent>
+                          </Dialog>
                         </CardActions>
                       </li>
                     ))}
