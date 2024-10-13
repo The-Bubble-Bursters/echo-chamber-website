@@ -1,5 +1,8 @@
 # Getting Started with Echo Chamber Website Development
 
+## Testing
+You'll need to make sure the prod env had test data. you can do this by going to test env on stripe and add products there (temporarily). eventually we'll need a beta and prod env
+
 ### `npm start`
 
 Runs the app in the development mode.\
