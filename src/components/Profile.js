@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs } from 'firebase/firestore';
 import Button from '@mui/material/Button';
 import { createPortalLink } from '../firebase-functions/createPortalLink'
+import Products from './Products'
 
 import { db } from '../firebase';
 
@@ -78,7 +79,10 @@ function Profile() {
             </Button>
           </div>
         )) : (
-          <p>No active subscription found.</p>
+          <div>
+            <p>No active subscription found.</p>
+            <Products></Products>
+          </div>
         )}
       </div>
     );
