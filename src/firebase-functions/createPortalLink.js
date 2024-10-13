@@ -8,7 +8,6 @@ export const createPortalLink = async () => {
     const { data } = await createPortalLinkFunction({
       returnUrl: window.location.origin, // URL to redirect after managing the subscription
       locale: "auto", // Automatically detects user’s locale
-      configuration: "bpc_1JSEAKHYgolSBA358VNoc2Hs", // Optional: ID of a portal configuration
     });
 
     window.location.assign(data.url); // Redirect to the Stripe portal

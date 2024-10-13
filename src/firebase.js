@@ -37,7 +37,7 @@ const app = initializeFirebase();
 const auth = app ? getAuth(app) : null;
 const db = app ? getFirestore(app) : null;
 const storage = app ? getStorage(app) : null;
-const functions = app ? getFunctions(app) : null;
+const functions = app ? getFunctions(app, "us-east1") : null;
 export { auth, db, storage, functions };
 
 export default app;
