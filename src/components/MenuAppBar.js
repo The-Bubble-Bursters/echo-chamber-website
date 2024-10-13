@@ -26,12 +26,15 @@ export default function MenuAppBar() {
   const [showAuth, setShowAuth] = useState(true);
   const navigate = useNavigate();
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (location) => {
     setAnchorEl(null);
+    if (location != null) {
+      navigate(location)
+    }
   };
 
   const logoutFirebase = () => {
@@ -117,12 +120,13 @@ export default function MenuAppBar() {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
+                onClose={() => handleClose(null)}
               >
-                <MenuItem onClick={handleClose}><Link to="/">Home</Link></MenuItem>
+                <MenuItem onClick={() => handleClose("/")}>Home</MenuItem>
+                <MenuItem onClick={() => handleClose("/products")}>Products</MenuItem>
                 {showAuth ? [
-                  <MenuItem key="login" onClick={handleClose}><Link to="/login">Login</Link></MenuItem>,
-                  <MenuItem key="register" onClick={handleClose}><Link to="/register">Register</Link></MenuItem>
+                  <MenuItem key="login" onClick={() => handleClose("/login")}>Login</MenuItem>,
+                  <MenuItem key="register" onClick={() => handleClose("/register")}>Register</MenuItem>
                 ] : [
                   <MenuItem key="logout" onClick={logoutFirebase}>Logout</MenuItem>
                 ]}

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // For authentication
 import { getFirestore } from "firebase/firestore"; // For Firestore
 import { getStorage } from "firebase/storage"; // For storage
+import { getFunctions } from "firebase/functions"; // Import functions
 
 
 // API keys for Firebase services are not secret
@@ -36,6 +37,7 @@ const app = initializeFirebase();
 const auth = app ? getAuth(app) : null;
 const db = app ? getFirestore(app) : null;
 const storage = app ? getStorage(app) : null;
-export { auth, db, storage };
+const functions = app ? getFunctions(app) : null;
+export { auth, db, storage, functions };
 
 export default app;
