@@ -5,12 +5,24 @@ import Profile from './components/Profile'
 import SignInScreen from './components/SignInScreen'
 import Products from './components/Products'
 import RegisterScreen from './components/RegisterScreen'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NotFound from './components/NotFound';
+import { useEffect } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if we were redirected from the 404.html page
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectPath = searchParams.get("p");
+    if (redirectPath) {
+      navigate(redirectPath);
+    }
+  }, [navigate]);
+
   return (
     <div>
-        <Router>
         <div>
           <MenuAppBar></MenuAppBar>
 
@@ -21,9 +33,11 @@ function App() {
             <Route path="/register" element={<RegisterScreen/>} />
             <Route path="/Products" element={<Products/>} />
             <Route path="/profile" element={<Profile/>} />
+
+            {/* Catch-all route for undefined paths */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
-      </Router>
     </div>
   );
 }
