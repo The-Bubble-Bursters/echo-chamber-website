@@ -45,7 +45,7 @@ function SignInScreen() {
 
     // Cleanup subscription when the component unmounts
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   return (
     <div>
