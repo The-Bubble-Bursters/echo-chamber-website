@@ -142,7 +142,7 @@ function Products() {
   // Render products and prices
   return (
     <Box sx={{ padding: 4 }}>
-      {subLoading ? (
+      { loggedInUser && subLoading ? (
           <p>Loading subscription...</p>
         ) : subscriptions && subscriptions.length > 0 ? (
           <p>Please note that <b>you currently have an active subscription</b>. Go to your <Link to="/profile">Profile Page</Link> to view and manage</p>
