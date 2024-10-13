@@ -5,11 +5,34 @@ import { db, auth } from '../firebase';
 
 // Material UI components
 import { Box, Card, CardContent, CardActions, Button, Typography, CircularProgress, Grid2 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [subscriptions, setSubscriptions] = useState(null);
+  const [subLoading, setSubLoading] = useState(true);
+
+  const fetchSubscription = async (uid) => {
+    if (uid) {
+      setSubLoading(true);
+      try {
+        const subscriptionRef = collection(db, `customers/${uid}/subscriptions`);
+        const subscriptionDocs = await getDocs(subscriptionRef);
+        const userSubscriptions = subscriptionDocs.docs.map(doc => ({
+          id: doc.id, // Subscription ID
+          ...doc.data() // Subscription data
+        }));
+
+        setSubscriptions(userSubscriptions);
+      } catch (error) {
+        console.error("Error fetching subscription: ", error);
+      } finally {
+        setSubLoading(false);
+      }
+    }
+  };
 
   const createCheckoutSession = async (currentUser, priceId) => {
     if (!currentUser) {
@@ -100,6 +123,13 @@ function Products() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    // Fetch subscription only when loggedInUser is set
+    if (loggedInUser) {
+      fetchSubscription(loggedInUser.uid);
+    }
+  }, [loggedInUser]); // Runs whenever loggedInUser changes
+
   // Render loading state
   if (loading) {
     return (
@@ -112,6 +142,12 @@ function Products() {
   // Render products and prices
   return (
     <Box sx={{ padding: 4 }}>
+      {subLoading ? (
+          <p>Loading subscription...</p>
+        ) : subscriptions && subscriptions.length > 0 ? (
+          <p>Please note that <b>you currently have an active subscription</b>. Go to your <Link to="/profile">Profile Page</Link> to view and manage</p>
+        ) : null
+      }
       <Typography variant="h4" gutterBottom>
         Products
       </Typography>
