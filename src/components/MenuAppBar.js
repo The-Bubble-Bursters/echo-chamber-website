@@ -123,7 +123,7 @@ export default function MenuAppBar() {
                 onClose={() => handleClose(null)}
               >
                 <MenuItem onClick={() => handleClose("/")}>Home</MenuItem>
-                <MenuItem onClick={() => handleClose("/products")}>Products</MenuItem>
+                <MenuItem onClick={() => handleClose("/premium")}>Premium</MenuItem>
                 {showAuth ? [
                   <MenuItem key="login" onClick={() => handleClose("/login")}>Login</MenuItem>,
                   <MenuItem key="register" onClick={() => handleClose("/register")}>Register</MenuItem>

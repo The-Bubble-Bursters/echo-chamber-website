@@ -156,7 +156,7 @@ function Products() {
         ) : null
       }
       <Typography variant="h4" gutterBottom>
-        Products
+        Echo Chamber Premium
       </Typography>
       
       {products.length > 0 ? (

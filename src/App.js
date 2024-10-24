@@ -31,7 +31,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<SignInScreen/>} />
             <Route path="/register" element={<RegisterScreen/>} />
-            <Route path="/Products" element={<Products/>} />
+            <Route path="/premium" element={<Products/>} />
             <Route path="/profile" element={<Profile/>} />
 
             {/* Catch-all route for undefined paths */}
