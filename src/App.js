@@ -5,6 +5,7 @@ import Profile from './components/Profile'
 import SignInScreen from './components/SignInScreen'
 import Products from './components/Products'
 import RegisterScreen from './components/RegisterScreen'
+import PrivacyPolicy from './components/PrivacyPolicy'
 import NotFound from './components/NotFound';
 import { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -33,6 +34,7 @@ function App() {
             <Route path="/register" element={<RegisterScreen/>} />
             <Route path="/premium" element={<Products/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/privacy" element={<PrivacyPolicy/>} />
 
             {/* Catch-all route for undefined paths */}
             <Route path="*" element={<NotFound />} />

@@ -130,6 +130,7 @@ export default function MenuAppBar() {
                 ] : [
                   <MenuItem key="logout" onClick={logoutFirebase}>Logout</MenuItem>
                 ]}
+                <MenuItem onClick={() => handleClose("/privacy")}>Privacy</MenuItem>
 
               </Menu>
             </div>
