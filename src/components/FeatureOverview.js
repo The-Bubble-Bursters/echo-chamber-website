@@ -33,7 +33,7 @@ const FeatureOverview = () => {
         </Typography>
         <Grid2 container spacing={3} justifyContent="center">
           {features.map((feature, index) => (
-            <Grid2 item xs={12} sm={6} md={4} key={index}>
+            <Grid2 xs={12} sm={6} md={4} key={index}>
               <Paper 
                 elevation={3} 
                 sx={{ 

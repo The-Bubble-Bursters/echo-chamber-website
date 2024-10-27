@@ -121,6 +121,19 @@ function RegisterScreen() {
         >
           Register
         </Button>
+        {/* Register Button */}
+        <div style={{ marginTop: '1rem' }}>
+          <p>Already have an account?
+            <Button 
+              variant="outlined" 
+              color="secondary" 
+              onClick={() => navigate('/login')} 
+              style={{ marginLeft: '0.5rem' }}
+            >
+              Login
+            </Button>
+          </p>
+        </div>
       </Paper>
     </Container>
   );
