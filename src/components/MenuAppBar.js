@@ -47,23 +47,15 @@ export default function MenuAppBar() {
   };
 
   useEffect(() => {
-    // async listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setShowAuth(false)
-      }
-      else {
-        setShowAuth(true)
-      }
+      setShowAuth(!user);
     });
-
-    // Cleanup subscription when the component unmounts
     return () => unsubscribe();
   }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ background: '#014397', padding: '8px 16px' }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -73,68 +65,64 @@ export default function MenuAppBar() {
             onClick={() => navigate('/')}
             sx={{ mr: 2 }}
           >
-            <HomeIcon fontSize="large" />
+            <img 
+                src="./echo-chamber-high-resolution-logo.png" 
+                alt="Logo" 
+                height={50} 
+                style={{ marginRight: '16px' }} 
+            />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Echo Chamber
           </Typography>
-          
-          {auth && (
-            
-            <div>
-
-              {showAuth ? null
-                 : 
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    onClick={() => navigate('/profile')}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-              }
-
-              <IconButton
-                size="large"
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-              >
-                <MenuIcon />
-              </IconButton>
-              
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={() => handleClose(null)}
-              >
-                <MenuItem onClick={() => handleClose("/")}>Home</MenuItem>
-                <MenuItem onClick={() => handleClose("/premium")}>Premium</MenuItem>
-                {showAuth ? [
-                  <MenuItem key="login" onClick={() => handleClose("/login")}>Login</MenuItem>,
-                  <MenuItem key="register" onClick={() => handleClose("/register")}>Register</MenuItem>
-                ] : [
-                  <MenuItem key="logout" onClick={logoutFirebase}>Logout</MenuItem>
-                ]}
-                <MenuItem onClick={() => handleClose("/privacy")}>Privacy</MenuItem>
-
-              </Menu>
-            </div>
+          {showAuth ? null : (
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              onClick={() => navigate('/profile')}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
           )}
+          <IconButton
+            size="large"
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={() => handleClose(null)}
+          >
+            <MenuItem onClick={() => handleClose("/")}>Home</MenuItem>
+            <MenuItem onClick={() => handleClose("/premium")}>Premium</MenuItem>
+            {showAuth ? (
+              <>
+                <MenuItem onClick={() => handleClose("/login")}>Login</MenuItem>
+                <MenuItem onClick={() => handleClose("/register")}>Register</MenuItem>
+              </>
+            ) : (
+              <MenuItem onClick={logoutFirebase}>Logout</MenuItem>
+            )}
+            <MenuItem onClick={() => handleClose("/privacy")}>Privacy</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     </Box>
