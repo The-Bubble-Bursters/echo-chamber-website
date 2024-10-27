@@ -5,7 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import Button from '@mui/material/Button';
 import { createPortalLink } from '../firebase-functions/createPortalLink';
 import Products from './Products';
-import { Typography, CircularProgress, Box, Grid2 } from '@mui/material';
+import { Typography, CircularProgress, Box, Grid2, Container } from '@mui/material';
 
 import { db } from '../firebase';
 
@@ -62,51 +62,47 @@ function Profile() {
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: '100vh', padding: 2 }}
-    >
-      <Typography variant="h4" gutterBottom>Your Profile</Typography>
-      <Typography variant="h6">Name: {loggedInUser.displayName}</Typography>
-      <Typography variant="h6">Email: {loggedInUser.email}</Typography>
-      
-      <Typography variant="h5" sx={{ marginTop: 2 }}>Subscription Status</Typography>
+    <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography variant="h4" gutterBottom>Your Profile</Typography>
+        <Typography variant="h6">Name: {loggedInUser.displayName}</Typography>
+        <Typography variant="h6">Email: {loggedInUser.email}</Typography>
 
-      {subLoading ? (
-        <CircularProgress sx={{ marginTop: 2 }} />
-      ) : subscriptions && subscriptions.length > 0 ? (
-        <Grid2 container spacing={2} sx={{ marginTop: 2 }}>
-          {subscriptions.map(subscription => (
-            <Grid2 item xs={12} sm={6} md={4} key={subscription.id}>
-              <Box 
-                border={1} 
-                borderColor="grey.400" 
-                borderRadius={2} 
-                padding={2} 
-                display="flex" 
-                flexDirection="column" 
-                alignItems="center"
-              >
-                <Typography>Status: {subscription.status}</Typography>
-                <Typography>Role: {subscription.role}</Typography>
-                <Typography>Plan: {subscription.items[0].price.product.name}</Typography>
-                <Button variant="contained" onClick={() => createPortalLink()}>
-                  Manage Subscription
-                </Button>
-              </Box>
-            </Grid2>
-          ))}
-        </Grid2>
-      ) : (
-        <Box sx={{ marginTop: 2 }}>
-          <Typography>No active subscription found.</Typography>
-          <Products />
-        </Box>
-      )}
-    </Box>
+        <Typography variant="h5" sx={{ marginTop: 2 }}>Subscription Status</Typography>
+
+        {subLoading ? (
+          <CircularProgress sx={{ marginTop: 2 }} />
+        ) : subscriptions && subscriptions.length > 0 ? (
+          <Grid2 container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>
+            {subscriptions.map(subscription => (
+              <Grid2 item xs={12} sm={6} md={4} key={subscription.id}>
+                <Box 
+                  border={1} 
+                  borderColor="grey.400" 
+                  borderRadius={2} 
+                  padding={2} 
+                  display="flex" 
+                  flexDirection="column" 
+                  alignItems="center"
+                >
+                  <Typography>Status: {subscription.status}</Typography>
+                  <Typography>Role: {subscription.role}</Typography>
+                  <Typography>Plan: {subscription.items[0].price.product.name}</Typography>
+                  <Button variant="contained" onClick={() => createPortalLink()}>
+                    Manage Subscription
+                  </Button>
+                </Box>
+              </Grid2>
+            ))}
+          </Grid2>
+        ) : (
+          <Box sx={{ marginTop: 2 }}>
+            <Typography>No active subscription found.</Typography>
+            <Products />
+          </Box>
+        )}
+      </Box>
+    </Container>
   );
 }
 
