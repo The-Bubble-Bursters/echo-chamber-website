@@ -1,11 +1,13 @@
 import './App.css';
 import MenuAppBar from './components/MenuAppBar'
+import { Box } from '@mui/material';
 import LandingPage from './components/LandingPage'
 import Profile from './components/Profile'
 import SignInScreen from './components/SignInScreen'
 import Products from './components/Products'
 import RegisterScreen from './components/RegisterScreen'
 import PrivacyPolicy from './components/PrivacyPolicy'
+import Footer from './components/Footer'
 import NotFound from './components/NotFound';
 import { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -39,26 +41,40 @@ function App() {
   }, [navigate]);
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <MenuAppBar></MenuAppBar>
-
-        {/* Routes to render different components based on URL */}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh', // Ensures the container takes at least the full viewport height
+      }}
+    >
+      <MenuAppBar />
+      <Box
+        sx={{
+          flex: '1 0 auto', // This will grow to take available space
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start', // Aligns content at the top
+          overflowY: 'hidden', // Prevents vertical scrolling
+        }}
+      >
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<SignInScreen/>} />
-          <Route path="/register" element={<RegisterScreen/>} />
-          <Route path="/premium" element={<Products/>} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/privacy" element={<PrivacyPolicy/>} />
-
-          {/* Catch-all route for undefined paths */}
+          <Route path="/login" element={<SignInScreen />} />
+          <Route path="/register" element={<RegisterScreen />} />
+          <Route path="/premium" element={<Products />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </ThemeProvider>
-    </div>
+      </Box>
+      <Footer sx={{ mt: 'auto' }} /> {/* Keep the footer at the bottom */}
+    </Box>
+    </ThemeProvider>
   );
+  
 }
 
 export default App;

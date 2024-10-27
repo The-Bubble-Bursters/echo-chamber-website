@@ -3,7 +3,6 @@ import VideoSection from './VideoSection';
 import FeatureOverview from './FeatureOverview';
 // import Testimonials from './Testimonials';
 import PremiumCTA from './PremiumCTA';
-import Footer from './Footer';
 import { CssBaseline, Divider, Box } from '@mui/material';
 
 function LandingPage() {
@@ -24,7 +23,6 @@ function LandingPage() {
       </Box>
       {/* <Testimonials /> */}
       <PremiumCTA />
-      <Footer />
     </div>
   );
 }

@@ -11,15 +11,7 @@ import Menu from '@mui/material/Menu';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import SvgIcon from '@mui/material/SvgIcon';
 
-function HomeIcon(props) {
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-    </SvgIcon>
-  );
-}
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -114,10 +106,9 @@ export default function MenuAppBar() {
             <MenuItem onClick={() => handleClose("/")}>Home</MenuItem>
             <MenuItem onClick={() => handleClose("/premium")}>Premium</MenuItem>
             {showAuth ? (
-              <>
+              <div>
                 <MenuItem onClick={() => handleClose("/login")}>Login</MenuItem>
-                <MenuItem onClick={() => handleClose("/register")}>Register</MenuItem>
-              </>
+              </div>
             ) : (
               <MenuItem onClick={logoutFirebase}>Logout</MenuItem>
             )}

@@ -3,8 +3,9 @@ import { auth } from '../firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs } from 'firebase/firestore';
 import Button from '@mui/material/Button';
-import { createPortalLink } from '../firebase-functions/createPortalLink'
-import Products from './Products'
+import { createPortalLink } from '../firebase-functions/createPortalLink';
+import Products from './Products';
+import { Typography, CircularProgress, Box, Grid2 } from '@mui/material';
 
 import { db } from '../firebase';
 
@@ -20,10 +21,10 @@ function Profile() {
         const subscriptionRef = collection(db, `customers/${uid}/subscriptions`);
         const subscriptionDocs = await getDocs(subscriptionRef);
         const userSubscriptions = subscriptionDocs.docs.map(doc => ({
-          id: doc.id, // Subscription ID
-          ...doc.data() // Subscription data
+          id: doc.id,
+          ...doc.data()
         }));
-        
+
         setSubscriptions(userSubscriptions);
       } catch (error) {
         console.error("Error fetching subscription: ", error);
@@ -34,7 +35,6 @@ function Profile() {
   };
 
   useEffect(() => {
-    // Listener for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedInUser({
@@ -44,7 +44,7 @@ function Profile() {
         });
       } else {
         setLoggedInUser(null);
-        setSubscriptions(null); // Clear subscription when user logs out
+        setSubscriptions(null);
       }
     });
 
@@ -52,41 +52,62 @@ function Profile() {
   }, []);
 
   useEffect(() => {
-    // Fetch subscription only when loggedInUser is set
     if (loggedInUser) {
       fetchSubscription(loggedInUser.uid);
     }
-  }, [loggedInUser]); // Runs whenever loggedInUser changes
+  }, [loggedInUser]);
 
   if (loggedInUser === null) {
     return <div>Not logged in</div>;
-  } else {
-    return (
-      <div>
-        <h1>Your Profile</h1>
-        <p>Name: {loggedInUser.displayName}</p>
-        <p>Email: {loggedInUser.email}</p>
-        <h2>Subscription Status</h2>
-        {subLoading ? (
-          <p>Loading subscription...</p>
-        ) : subscriptions && subscriptions.length > 0 ? subscriptions.map(subscription => (
-          <div key={subscription.id}>
-            <p>Status: {subscription.status}</p>
-            <p>Role: {subscription.role}</p>
-            <p>Plan: {subscription.items[0].price.product.name}</p>
-            <Button variant="contained" onClick={() => createPortalLink()}>
-              Manage Subscription
-            </Button>
-          </div>
-        )) : (
-          <div>
-            <p>No active subscription found.</p>
-            <Products></Products>
-          </div>
-        )}
-      </div>
-    );
   }
+
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ minHeight: '100vh', padding: 2 }}
+    >
+      <Typography variant="h4" gutterBottom>Your Profile</Typography>
+      <Typography variant="h6">Name: {loggedInUser.displayName}</Typography>
+      <Typography variant="h6">Email: {loggedInUser.email}</Typography>
+      
+      <Typography variant="h5" sx={{ marginTop: 2 }}>Subscription Status</Typography>
+
+      {subLoading ? (
+        <CircularProgress sx={{ marginTop: 2 }} />
+      ) : subscriptions && subscriptions.length > 0 ? (
+        <Grid2 container spacing={2} sx={{ marginTop: 2 }}>
+          {subscriptions.map(subscription => (
+            <Grid2 item xs={12} sm={6} md={4} key={subscription.id}>
+              <Box 
+                border={1} 
+                borderColor="grey.400" 
+                borderRadius={2} 
+                padding={2} 
+                display="flex" 
+                flexDirection="column" 
+                alignItems="center"
+              >
+                <Typography>Status: {subscription.status}</Typography>
+                <Typography>Role: {subscription.role}</Typography>
+                <Typography>Plan: {subscription.items[0].price.product.name}</Typography>
+                <Button variant="contained" onClick={() => createPortalLink()}>
+                  Manage Subscription
+                </Button>
+              </Box>
+            </Grid2>
+          ))}
+        </Grid2>
+      ) : (
+        <Box sx={{ marginTop: 2 }}>
+          <Typography>No active subscription found.</Typography>
+          <Products />
+        </Box>
+      )}
+    </Box>
+  );
 }
 
 export default Profile;

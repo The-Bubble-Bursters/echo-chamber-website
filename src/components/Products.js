@@ -4,7 +4,19 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from '../firebase';
 
 // Material UI components
-import { Box, Card, CardContent, CardActions, Button, Typography, CircularProgress, Grid2, Dialog, DialogContent, DialogTitle } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+  CircularProgress,
+  Grid2,
+  Dialog,
+  DialogContent,
+  DialogTitle
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 function Products() {
@@ -14,8 +26,7 @@ function Products() {
   const [subscriptions, setSubscriptions] = useState(null);
   const [subLoading, setSubLoading] = useState(true);
   const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
-  const [redirecting, setRedirecting] = useState(false); // State to control redirection
-
+  const [redirecting, setRedirecting] = useState(false);
 
   const fetchSubscription = async (uid) => {
     if (uid) {
@@ -24,8 +35,8 @@ function Products() {
         const subscriptionRef = collection(db, `customers/${uid}/subscriptions`);
         const subscriptionDocs = await getDocs(subscriptionRef);
         const userSubscriptions = subscriptionDocs.docs.map(doc => ({
-          id: doc.id, // Subscription ID
-          ...doc.data() // Subscription data
+          id: doc.id,
+          ...doc.data()
         }));
 
         setSubscriptions(userSubscriptions);
@@ -43,23 +54,21 @@ function Products() {
       return;
     }
     try {
-      setOpenLoadingDialog(true)
-      // Add a checkout session for the current user
+      setOpenLoadingDialog(true);
       const checkoutSessionsRef = collection(db, "customers", currentUser.uid, "checkout_sessions");
       const docRef = await addDoc(checkoutSessionsRef, {
-        price: priceId,  // Use dynamic price ID
+        price: priceId,
         success_url: window.location.origin,
         cancel_url: window.location.origin,
       });
 
-      // Listen for updates on the checkout session
       onSnapshot(docRef, (snap) => {
         const { error, url } = snap.data();
         if (error) {
           alert(`An error occurred: ${error.message}`);
         }
         if (url) {
-          setRedirecting(true)
+          setRedirecting(true);
           window.location.assign(url);
         }
       });
@@ -81,21 +90,18 @@ function Products() {
 
       for (const doc of querySnapshot.docs) {
         const productData = doc.data();
-        
-        // Fetch prices subcollection
         const pricesRef = collection(doc.ref, "prices");
         const priceSnap = await getDocs(pricesRef);
         const prices = priceSnap.docs.map((priceDoc) => {
           const priceData = priceDoc.data();
           const isRecurring = priceData.type === 'recurring';
           
-          // Format price object
           return {
             id: priceDoc.id,
-            amount: (priceData.unit_amount / 100).toFixed(2), // Convert cents to dollars
+            amount: (priceData.unit_amount / 100).toFixed(2),
             currency: priceData.currency.toUpperCase(),
             type: priceData.type,
-            interval: isRecurring ? priceData.recurring?.interval : null // Get interval if it's recurring
+            interval: isRecurring ? priceData.recurring?.interval : null
           };
         });
 
@@ -119,10 +125,9 @@ function Products() {
       if (user) {
         setLoggedInUser({
           uid: user.uid
-      })
-      }
-      else {
-        setLoggedInUser(null)
+        });
+      } else {
+        setLoggedInUser(null);
       }
     });
     getProducts();
@@ -131,13 +136,11 @@ function Products() {
   }, []);
 
   useEffect(() => {
-    // Fetch subscription only when loggedInUser is set
     if (loggedInUser) {
       fetchSubscription(loggedInUser.uid);
     }
-  }, [loggedInUser]); // Runs whenever loggedInUser changes
+  }, [loggedInUser]);
 
-  // Render loading state
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -146,59 +149,51 @@ function Products() {
     );
   }
 
-  // Render products and prices
   return (
-    <Box sx={{ padding: 4 }}>
-      { loggedInUser && subLoading ? (
-          <p>Loading subscription...</p>
-        ) : subscriptions && subscriptions.length > 0 ? (
-          <p>Please note that <b>you currently have an active subscription</b>. Go to your <Link to="/profile">Profile Page</Link> to view and manage</p>
-        ) : null
-      }
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ padding: 4, backgroundColor: '#f2a1c4' }}>
+      {loggedInUser && subLoading ? (
+        <Typography align="center" color="white">Loading subscription...</Typography>
+      ) : subscriptions && subscriptions.length > 0 ? (
+        <Typography align="center" color="white">
+          Please note that <b>you currently have an active subscription</b>. Go to your <Link to="/profile">Profile Page</Link> to view and manage
+        </Typography>
+      ) : null}
+      
+      <Typography variant="h4" gutterBottom align="center" sx={{ color: '#014397' }}>
         Echo Chamber Premium
       </Typography>
       
       {products.length > 0 ? (
-        <Grid2 container spacing={4}>
+        <Grid2 container spacing={4} justifyContent="center">
           {products.map((product) => (
             <Grid2 xs={12} sm={6} md={4} key={product.id}>
-              <Card variant="outlined">
+              <Card variant="outlined" sx={{ borderColor: '#014397' }}>
                 <CardContent>
-                  <Typography variant="h5" gutterBottom>
+                  <Typography variant="h5" gutterBottom sx={{ color: '#014397' }}>
                     {product.name}
                   </Typography>
                   <Typography variant="body1" color="text.secondary">
                     {product.description}
                   </Typography>
 
-                  <Typography variant="h6" mt={2}>Prices:</Typography>
+                  <Typography variant="h6" mt={2} sx={{ color: '#014397' }}>Prices:</Typography>
                   <ul>
                     {product.prices.map((price) => (
-                      <li key={price.id}>
-                        {price.amount} {price.currency} - {price.type === 'recurring' 
-                          ? `Recurring (${price.interval})` 
-                          : 'One-time'}
+                      <li key={price.id} style={{ listStyleType: 'none' }}>
+                        <Typography sx={{ color: '#014397' }}>
+                          {price.amount} {price.currency} - {price.type === 'recurring' 
+                            ? `Recurring (${price.interval})` 
+                            : 'One-time'}
+                        </Typography>
                         <CardActions>
                           <Button
                             variant="contained"
-                            color="primary"
+                            sx={{ backgroundColor: '#014397', color: 'white' }} // Use navy color
                             fullWidth
-                            onClick={() => createCheckoutSession(loggedInUser, price.id)} // Use dynamic price ID
+                            onClick={() => createCheckoutSession(loggedInUser, price.id)}
                           >
                             Checkout
                           </Button>
-                          <Dialog open={openLoadingDialog} onClose={() => setOpenLoadingDialog(false)} aria-labelledby="alert-dialog-title">
-                            <DialogTitle id="alert-dialog-title">Processing...</DialogTitle>
-                            <DialogContent>
-                              <CircularProgress />
-                              {redirecting ? (
-                                <p>Redirecting you to Stripe for payment...</p>
-                              ) : (
-                                <p>Please wait while we prepare your payment.</p>
-                              )}
-                            </DialogContent>
-                          </Dialog>
                         </CardActions>
                       </li>
                     ))}
@@ -209,8 +204,19 @@ function Products() {
           ))}
         </Grid2>
       ) : (
-        <Typography>No products found</Typography>
+        <Typography align="center">No products found</Typography>
       )}
+      <Dialog open={openLoadingDialog} onClose={() => setOpenLoadingDialog(false)} aria-labelledby="alert-dialog-title">
+        <DialogTitle id="alert-dialog-title">Processing...</DialogTitle>
+        <DialogContent>
+          <CircularProgress />
+          {redirecting ? (
+            <Typography>Redirecting you to Stripe for payment...</Typography>
+          ) : (
+            <Typography>Please wait while we prepare your payment.</Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
