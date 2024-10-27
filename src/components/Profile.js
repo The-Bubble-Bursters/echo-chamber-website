@@ -75,7 +75,7 @@ function Profile() {
         ) : subscriptions && subscriptions.length > 0 ? (
           <Grid2 container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>
             {subscriptions.map(subscription => (
-              <Grid2 item xs={12} sm={6} md={4} key={subscription.id}>
+              <Grid2 xs={12} sm={6} md={4} key={subscription.id}>
                 <Box 
                   border={1} 
                   borderColor="grey.400" 
