@@ -112,6 +112,7 @@ export default function MenuAppBar() {
             ) : (
               <MenuItem onClick={logoutFirebase}>Logout</MenuItem>
             )}
+            <MenuItem onClick={() => handleClose("/support")}>Support</MenuItem>
             <MenuItem onClick={() => handleClose("/privacy")}>Privacy</MenuItem>
           </Menu>
         </Toolbar>

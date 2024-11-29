@@ -7,6 +7,7 @@ import SignInScreen from './components/SignInScreen'
 import Products from './components/Products'
 import RegisterScreen from './components/RegisterScreen'
 import PrivacyPolicy from './components/PrivacyPolicy'
+import SupportPage from './components/SupportPage'
 import Footer from './components/Footer'
 import NotFound from './components/NotFound';
 import { useEffect } from 'react';
@@ -67,6 +68,7 @@ function App() {
           <Route path="/premium" element={<Products />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/support" element={<SupportPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Box>
