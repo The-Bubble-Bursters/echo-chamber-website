@@ -27,8 +27,6 @@ const SupportPage = () => {
       }),
     });
 
-    const result = await response.json();
-
     if (response.ok) {
       setStatus('Your message has been sent successfully!');
       setEmail('');
